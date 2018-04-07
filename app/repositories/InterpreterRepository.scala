@@ -1,6 +1,7 @@
 package repositories
 
 import javax.inject.Singleton
+import models.EnvironmentDTO
 import play.api.Logger
 import scorex.crypto.hash.Blake2b256
 import sigmastate.Values.ByteArrayConstant
@@ -34,19 +35,21 @@ class InterpreterRepository() {
     "pubkeyB" -> pubkeyB,
     "hx" -> hx)
 
-  def list: Map[String, Any] = {
-    env
-  }
+//  def list: Map[String, Any] = {
+//    val r3 = env.map(e => EnvironmentDTO(e._1,e._2))
+//  }
 
-  def get = {
-    Seq(
-      "height1" -> height1,
-      "height2" -> height2,
-      "deadlineA" -> deadlineA,
-      "deadlineB" -> deadlineB,
-      "pubkeyA" -> pubkeyA,
-      "pubkeyB" -> pubkeyB,
-      "hx" -> hx)
+  def list = {
+    /*Seq(
+      EnvironmentDTO("height1", height1),
+      EnvironmentDTO("height2", height2),
+      EnvironmentDTO("deadlineA", deadlineA),
+      EnvironmentDTO("deadlineB", deadlineB),
+      EnvironmentDTO("pubkeyA", pubkeyA),
+      EnvironmentDTO("pubkeyB", pubkeyB),
+      EnvironmentDTO("hx", hx)
+    )*/
+    env.map(i => EnvironmentDTO(i._1, i._2))
   }
 
   def save(key: String, value: Any): Unit = {

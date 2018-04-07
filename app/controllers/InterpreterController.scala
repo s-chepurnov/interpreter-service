@@ -1,10 +1,12 @@
 package controllers
 
 import javax.inject.Inject
+import models.EnvironmentDTO
 import play.api.Logger
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, Writes}
 import play.api.mvc._
 import repositories.InterpreterRepository
+import scapi.sigma.DLogProtocol.ProveDlog
 import scorex.crypto.hash.Blake2b256
 import sigmastate.Values._
 import sigmastate._
@@ -28,10 +30,18 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
   }
 
   def getContext = Action {implicit request =>
-    //TODO
-    //val env = interpreterRepository.list
 
-    Ok(Json.obj("result"->"success"))
+    implicit val environmentDTOWrites = new Writes[EnvironmentDTO] {
+      def writes(env: EnvironmentDTO) = Json.obj(
+        env.value match {
+          case ProveDlog => env.key.toString -> env.value.asInstanceOf[ProveDlog].bytes
+          case ByteArrayConstant => env.key.toString -> env.value.asInstanceOf[ByteArrayConstant].value
+          case _ => {println("always"); env.key.toString -> env.value.toString}
+        }
+      )
+    }
+
+    Ok(Json.toJson(interpreterRepository.list))
   }
 
   def asBoolValue(v: Value[SType]): Value[SBoolean.type] = v.asInstanceOf[Value[SBoolean.type]]
