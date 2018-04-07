@@ -11,8 +11,30 @@ import test.sigmastate.utxo.ErgoProvingInterpreter
 @Singleton
 class InterpreterRepository() {
   private val logger = Logger(this.getClass)
+  val proverA = new ErgoProvingInterpreter
+  val proverB = new ErgoProvingInterpreter
+  val pubkeyA = proverA.dlogSecrets.head.publicImage
+  val pubkeyB = proverB.dlogSecrets.head.publicImage
+  val verifier = new ErgoInterpreter
 
-  var env = Map[String, Any]()
+  val x = proverA.contextExtenders(1).value.asInstanceOf[Array[Byte]]
+  val hx = ByteArrayConstant(Blake2b256(x))
+
+  val height1 = 100000
+  val height2 = 50000
+
+  val deadlineA = 1000
+  val deadlineB = 500
+
+  var env = Map[String, Any](
+    "height1" -> height1,
+    "height2" -> height2,
+    "deadlineA" -> deadlineA,
+    "deadlineB" -> deadlineB,
+    "pubkeyA" -> pubkeyA,
+    "pubkeyB" -> pubkeyB,
+    "hx" -> hx)
+
 
   //TODO : delete it
   def list = {
