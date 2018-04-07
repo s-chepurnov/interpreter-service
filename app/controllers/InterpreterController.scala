@@ -1,14 +1,11 @@
 package controllers
 
-import java.nio.charset.StandardCharsets
-
 import javax.inject.Inject
 import models.EnvironmentDTO
 import play.api.Logger
 import play.api.libs.json.{Json, Writes}
 import play.api.mvc._
 import repositories.InterpreterRepository
-import scapi.sigma.DLogProtocol.ProveDlog
 import scorex.crypto.hash.Blake2b256
 import sigmastate.Values._
 import sigmastate._
@@ -25,10 +22,9 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     Ok(views.html.index()).enableCors
   }
 
-  def addContext(key: String, value: Any) = Action {implicit request =>
-    //TODO
-    interpreterRepository.save(key, value)
-    Ok(Json.obj("result"->"ok")).enableCors
+  def setContext(name: String) = Action {implicit request =>
+    //interpreterRepository.save(key, value)
+    Ok(Json.obj("result"->"true")).enableCors
   }
 
   def getContext = Action {implicit request =>
@@ -130,9 +126,9 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     //verifier.verify(prop1, ctx2, pr2, fakeMessage).get shouldBe true
 
     if (verifier.verify(prop2, ctx1, pr, fakeMessage).get && verifier.verify(prop1, ctx2, pr2, fakeMessage).get) {
-      Ok(Json.obj("result"->"success")).enableCors
+      Ok(Json.obj("result"->"true")).enableCors
     } else {
-      Ok(Json.obj("result"->"failure")).enableCors
+      Ok(Json.obj("result"->"false")).enableCors
     }
   }
 
@@ -145,13 +141,13 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     try {
       asBoolValue(new ErgoInterpreterSpecification().compile(env, script))
     } catch {
-      case e: Exception => {msg = e.getMessage;}
+      case e: Exception => {msg = e.getMessage}
     }
 
     if(msg.isEmpty)
-      Ok(Json.obj("result"->"success")).enableCors
+      Ok(Json.obj("result"->"true")).enableCors
     else
-      Ok(Json.obj("result"->"failure","msg"->msg)).enableCors
+      Ok(Json.obj("result"->"false","msg"->msg)).enableCors
   }
 
   implicit class RichResult (result: Result) {
