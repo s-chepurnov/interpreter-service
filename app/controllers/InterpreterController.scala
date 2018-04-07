@@ -23,12 +23,11 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
   }
 
   def setContext(name: String) = Action {implicit request =>
-    //interpreterRepository.save(key, value)
-    Ok(Json.obj("result"->"true")).enableCors
+    interpreterRepository.put(name)
+    Ok(Json.obj("result"->true)).enableCors
   }
 
   def getContext = Action {implicit request =>
-
     implicit val environmentDTOWrites = new Writes[EnvironmentDTO] {
       def writes(env: EnvironmentDTO) = Json.obj(
         env.value match {
@@ -39,7 +38,8 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
       )
     }
 
-    Ok(Json.toJson(interpreterRepository.list)).enableCors
+    val env = interpreterRepository.env.map(i => EnvironmentDTO(i._1, i._2))
+    Ok(Json.toJson(env)).enableCors
   }
 
   def asBoolValue(v: Value[SType]): Value[SBoolean.type] = v.asInstanceOf[Value[SBoolean.type]]
@@ -126,17 +126,15 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     //verifier.verify(prop1, ctx2, pr2, fakeMessage).get shouldBe true
 
     if (verifier.verify(prop2, ctx1, pr, fakeMessage).get && verifier.verify(prop1, ctx2, pr2, fakeMessage).get) {
-      Ok(Json.obj("result"->"true")).enableCors
+      Ok(Json.obj("result"->true)).enableCors
     } else {
-      Ok(Json.obj("result"->"false")).enableCors
+      Ok(Json.obj("result"->false)).enableCors
     }
   }
 
   def compileScript(script: String) =  Action {implicit request =>
     println(script)
-
     val env = interpreterRepository.env
-
     var msg = ""
     try {
       asBoolValue(new ErgoInterpreterSpecification().compile(env, script))
@@ -145,9 +143,9 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     }
 
     if(msg.isEmpty)
-      Ok(Json.obj("result"->"true")).enableCors
+      Ok(Json.obj("result"->true)).enableCors
     else
-      Ok(Json.obj("result"->"false","msg"->msg)).enableCors
+      Ok(Json.obj("result"->false,"msg"->msg)).enableCors
   }
 
   implicit class RichResult (result: Result) {
@@ -159,5 +157,3 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     )
   }
 }
-
-

@@ -12,33 +12,9 @@ import test.sigmastate.utxo.ErgoProvingInterpreter
 class InterpreterRepository() {
   private val logger = Logger(this.getClass)
 
-  val proverA = new ErgoProvingInterpreter
-  val proverB = new ErgoProvingInterpreter
-  val pubkeyA = proverA.dlogSecrets.head.publicImage
-  val pubkeyB = proverB.dlogSecrets.head.publicImage
-  val verifier = new ErgoInterpreter
+  var env = Map[String, Any]()
 
-  val x = proverA.contextExtenders(1).value.asInstanceOf[Array[Byte]]
-  val hx = ByteArrayConstant(Blake2b256(x))
-
-  val height1 = 100000
-  val height2 = 50000
-
-  val deadlineA = 1000
-  val deadlineB = 500
-  var env = Map(
-    "height1" -> height1,
-    "height2" -> height2,
-    "deadlineA" -> deadlineA,
-    "deadlineB" -> deadlineB,
-    "pubkeyA" -> pubkeyA,
-    "pubkeyB" -> pubkeyB,
-    "hx" -> hx)
-
-//  def list: Map[String, Any] = {
-//    val r3 = env.map(e => EnvironmentDTO(e._1,e._2))
-//  }
-
+  //TODO : delete it
   def list = {
     /*Seq(
       EnvironmentDTO("height1", height1),
@@ -49,19 +25,95 @@ class InterpreterRepository() {
       EnvironmentDTO("pubkeyB", pubkeyB),
       EnvironmentDTO("hx", hx)
     )*/
-    env.map(i => EnvironmentDTO(i._1, i._2))
   }
 
-  def getEnv = {
-    env
-  }
-
-  def save(key: String, value: Any): Unit = {
-    env += (key -> value)
+  def put(name: String): Unit = {
+    name match {
+      case "atomic" => env = getAtomic
+      case "ring" => env = getRing
+      case "demurrage" => env = getDemurrage
+    }
   }
 
   def clear() : Unit = {
     env = Map()
   }
 
+  def getAtomic() = {
+    val proverA = new ErgoProvingInterpreter
+    val proverB = new ErgoProvingInterpreter
+    val pubkeyA = proverA.dlogSecrets.head.publicImage
+    val pubkeyB = proverB.dlogSecrets.head.publicImage
+    val verifier = new ErgoInterpreter
+
+    val x = proverA.contextExtenders(1).value.asInstanceOf[Array[Byte]]
+    val hx = ByteArrayConstant(Blake2b256(x))
+
+    val height1 = 100000
+    val height2 = 50000
+
+    val deadlineA = 1000
+    val deadlineB = 500
+
+    Map[String, Any](
+      "height1" -> height1,
+      "height2" -> height2,
+      "deadlineA" -> deadlineA,
+      "deadlineB" -> deadlineB,
+      "pubkeyA" -> pubkeyA,
+      "pubkeyB" -> pubkeyB,
+      "hx" -> hx)
+  }
+
+  def getRing() = {
+    val proverA = new ErgoProvingInterpreter
+    val proverB = new ErgoProvingInterpreter
+    val pubkeyA = proverA.dlogSecrets.head.publicImage
+    val pubkeyB = proverB.dlogSecrets.head.publicImage
+    val verifier = new ErgoInterpreter
+
+    val x = proverA.contextExtenders(1).value.asInstanceOf[Array[Byte]]
+    val hx = ByteArrayConstant(Blake2b256(x))
+
+    val height1 = 100000
+    val height2 = 50000
+
+    val deadlineA = 1000
+    val deadlineB = 500
+
+    Map[String, Any](
+      "height1" -> height1,
+      "height2" -> height2,
+      "deadlineA" -> deadlineA,
+      "deadlineB" -> deadlineB,
+      "pubkeyA" -> pubkeyA,
+      "pubkeyB" -> pubkeyB,
+      "hx" -> hx)
+  }
+
+  def getDemurrage() = {
+    val proverA = new ErgoProvingInterpreter
+    val proverB = new ErgoProvingInterpreter
+    val pubkeyA = proverA.dlogSecrets.head.publicImage
+    val pubkeyB = proverB.dlogSecrets.head.publicImage
+    val verifier = new ErgoInterpreter
+
+    val x = proverA.contextExtenders(1).value.asInstanceOf[Array[Byte]]
+    val hx = ByteArrayConstant(Blake2b256(x))
+
+    val height1 = 100000
+    val height2 = 50000
+
+    val deadlineA = 1000
+    val deadlineB = 500
+
+    Map[String, Any](
+      "height1" -> height1,
+      "height2" -> height2,
+      "deadlineA" -> deadlineA,
+      "deadlineB" -> deadlineB,
+      "pubkeyA" -> pubkeyA,
+      "pubkeyB" -> pubkeyB,
+      "hx" -> hx)
+  }
 }
