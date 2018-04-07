@@ -1,5 +1,7 @@
 package controllers
 
+import java.nio.charset.StandardCharsets
+
 import javax.inject.Inject
 import models.EnvironmentDTO
 import play.api.Logger
@@ -20,13 +22,13 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
   private val logger = Logger(getClass)
 
   def index = Action { implicit request =>
-    Ok(views.html.index())
+    Ok(views.html.index()).enableCors
   }
 
   def addContext(key: String, value: Any) = Action {implicit request =>
     //TODO
     interpreterRepository.save(key, value)
-    Ok(Json.obj("result"->"ok"))
+    Ok(Json.obj("result"->"ok")).enableCors
   }
 
   def getContext = Action {implicit request =>
@@ -34,14 +36,14 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     implicit val environmentDTOWrites = new Writes[EnvironmentDTO] {
       def writes(env: EnvironmentDTO) = Json.obj(
         env.value match {
-          case ProveDlog => env.key.toString -> env.value.asInstanceOf[ProveDlog].bytes
-          case ByteArrayConstant => env.key.toString -> env.value.asInstanceOf[ByteArrayConstant].value
+          //case p: ProveDlog => env.key.toString -> new String(env.value.asInstanceOf[ProveDlog].bytes, StandardCharsets.UTF_8)
+          //case p: ByteArrayConstant => env.key.toString -> env.value.asInstanceOf[ByteArrayConstant].value
           case _ => env.key.toString -> env.value.toString
         }
       )
     }
 
-    Ok(Json.toJson(interpreterRepository.list))
+    Ok(Json.toJson(interpreterRepository.list)).enableCors
   }
 
   def asBoolValue(v: Value[SType]): Value[SBoolean.type] = v.asInstanceOf[Value[SBoolean.type]]
@@ -128,9 +130,9 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     //verifier.verify(prop1, ctx2, pr2, fakeMessage).get shouldBe true
 
     if (verifier.verify(prop2, ctx1, pr, fakeMessage).get && verifier.verify(prop1, ctx2, pr2, fakeMessage).get) {
-      Ok(Json.obj("result"->"success"))
+      Ok(Json.obj("result"->"success")).enableCors
     } else {
-      Ok(Json.obj("result"->"failure"))
+      Ok(Json.obj("result"->"failure")).enableCors
     }
   }
 
@@ -143,12 +145,23 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     try {
       asBoolValue(new ErgoInterpreterSpecification().compile(env, script))
     } catch {
-      case e: Exception => {msg = e.getMessage}
+      case e: Exception => {msg = e.getMessage;}
     }
 
     if(msg.isEmpty)
-      Ok(Json.obj("result"->"success"))
+      Ok(Json.obj("result"->"success")).enableCors
     else
-      Ok(Json.obj("result"->"failure","msg"->msg))
+      Ok(Json.obj("result"->"failure","msg"->msg)).enableCors
+  }
+
+  implicit class RichResult (result: Result) {
+    def enableCors =  result.withHeaders(
+      "Access-Control-Allow-Origin" -> "*"
+      , "Access-Control-Allow-Methods" -> "OPTIONS, GET, POST, PUT, DELETE, HEAD"   // OPTIONS for pre-flight
+      , "Access-Control-Allow-Headers" -> "Accept, Content-Type, Origin, X-Json, X-Prototype-Version, X-Requested-With" //, "X-My-NonStd-Option"
+      , "Access-Control-Allow-Credentials" -> "true"
+    )
   }
 }
+
+
