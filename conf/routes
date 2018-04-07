@@ -1,5 +1,8 @@
-GET        /                       controllers.HomeController.index
-GET        /test                   controllers.HomeController.test
+GET        /                                controllers.InterpreterController.index
+
+GET        /test                            controllers.InterpreterController.test
+GET        /getContext                      controllers.InterpreterController.getContext
+GET        /compileScript/:script           controllers.InterpreterController.compileScript(script: String)
 
 ->         /v1/posts               v1.post.PostRouter
 
