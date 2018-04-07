@@ -13,6 +13,8 @@ import sigmastate.utxo.{ErgoContext, ErgoInterpreter}
 import test.sigmastate.utxo.BoxHelpers.{fakeMessage, fakeSelf}
 import test.sigmastate.utxo.{ErgoInterpreterSpecification, ErgoProvingInterpreter}
 
+import scala.collection.script.Script
+
 class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepository: InterpreterRepository)
                                                                                       extends AbstractController(cc) {
 
@@ -133,6 +135,24 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
   }
 
   def compileScript(script: String) =  Action {implicit request =>
+    println(script)
+    val env = interpreterRepository.env
+    var msg = ""
+    try {
+      asBoolValue(new ErgoInterpreterSpecification().compile(env, script))
+    } catch {
+      case e: Exception => {msg = e.getMessage}
+    }
+
+    if(msg.isEmpty)
+      Ok(Json.obj("result"->true)).enableCors
+    else
+      Ok(Json.obj("result"->false,"msg"->msg)).enableCors
+  }
+
+  def compile =  Action {implicit request =>
+    require(request.hasBody)
+    val script: String = request.body.toString
     println(script)
     val env = interpreterRepository.env
     var msg = ""

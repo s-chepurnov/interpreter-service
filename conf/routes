@@ -4,6 +4,7 @@ GET        /test                            controllers.InterpreterController.te
 GET        /getContext                      controllers.InterpreterController.getContext
 GET        /setContext/:name                controllers.InterpreterController.setContext(name: String)
 GET        /compileScript/:script           controllers.InterpreterController.compileScript(script: String)
+POST       /compile                         controllers.InterpreterController.compile()
 
 
 ->         /v1/posts               v1.post.PostRouter
