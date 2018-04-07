@@ -52,6 +52,10 @@ class InterpreterRepository() {
     env.map(i => EnvironmentDTO(i._1, i._2))
   }
 
+  def getEnv = {
+    env
+  }
+
   def save(key: String, value: Any): Unit = {
     env += (key -> value)
   }

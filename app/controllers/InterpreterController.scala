@@ -152,14 +152,7 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
     val deadlineA = 1000
     val deadlineB = 500
 
-    val env = Map(
-      "height1" -> height1,
-      "height2" -> height2,
-      "deadlineA" -> deadlineA,
-      "deadlineB" -> deadlineB,
-      "pubkeyA" -> pubkeyA,
-      "pubkeyB" -> pubkeyB,
-      "hx" -> hx)
+    val env = interpreterRepository.env
 
     var msg = ""
     try {
