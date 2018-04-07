@@ -36,7 +36,7 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
         env.value match {
           case ProveDlog => env.key.toString -> env.value.asInstanceOf[ProveDlog].bytes
           case ByteArrayConstant => env.key.toString -> env.value.asInstanceOf[ByteArrayConstant].value
-          case _ => {println("always"); env.key.toString -> env.value.toString}
+          case _ => env.key.toString -> env.value.toString
         }
       )
     }
