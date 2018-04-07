@@ -135,22 +135,7 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
   }
 
   def compileScript(script: String) =  Action {implicit request =>
-    //val map = interpreterRepository.list
     println(script)
-    val proverA = new ErgoProvingInterpreter
-    val proverB = new ErgoProvingInterpreter
-    val pubkeyA = proverA.dlogSecrets.head.publicImage
-    val pubkeyB = proverB.dlogSecrets.head.publicImage
-    val verifier = new ErgoInterpreter
-
-    val x = proverA.contextExtenders(1).value.asInstanceOf[Array[Byte]]
-    val hx = ByteArrayConstant(Blake2b256(x))
-
-    val height1 = 100000
-    val height2 = 50000
-
-    val deadlineA = 1000
-    val deadlineB = 500
 
     val env = interpreterRepository.env
 
