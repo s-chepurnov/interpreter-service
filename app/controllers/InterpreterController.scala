@@ -152,7 +152,7 @@ class InterpreterController @Inject()(cc: ControllerComponents, interpreterRepos
 
   def compile =  Action {implicit request =>
     require(request.hasBody)
-    val script: String = request.body.toString
+    val script: String = request.body.asText.get
     println(script)
     val env = interpreterRepository.env
     var msg = ""
