@@ -1,5 +1,4 @@
 GET        /                                controllers.InterpreterController.index
-GET        /test                            controllers.InterpreterController.test
 POST       /execute                         controllers.InterpreterController.execute
 POST       /validate                        controllers.InterpreterController.validate
 GET        /getDic                          controllers.InterpreterController.getDic
