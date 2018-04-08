@@ -1,21 +1,103 @@
 @()
 <!doctype html>
+<html class="no-js" lang="ru">
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Play REST API</title>
-  </head>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Ergo sigma-state language online debugger</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <body>
-    <h1>Play REST API</h1>
+  <meta content="telephone=no" name="format-detection">
+  <!-- This make sence for mobile browsers. It means, that content has been optimized for mobile browsers -->
+  <meta name="HandheldFriendly" content="true">
 
-    <p>
-      This is a placeholder page to show you the REST API.
-    </p>
 
-    <ul>
-      <li><a href="/v1/interpreter">/v1/interpreter</a></li>
-    </ul>
-  </body>
+  <!--[if (gt IE 9)|!(IE)]><!-->
+  <link href="static/css/main6djh4k21emi.min.css" rel="stylesheet" type="text/css">
+  <!--<![endif]-->
+
+  <meta property="og:title" content="" />
+  <meta property="og:url" content="" />
+  <meta property="og:description" content="" />
+  <meta property="og:image" content="" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="500" />
+  <meta property="og:image:height" content="300" />
+  <meta property="twitter:description" content="" />
+  <link rel="image_src" href="" />
+  <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/mainag9plr0y66r.min.css")">
+  <script src="@routes.Assets.at("main6djh4k21emi.min.js")" type="text/javascript"></script>
+
+  <script>
+    (function(H){H.className=H.className.replace(/\bno-js\b/,'js')})(document.documentElement)
+  </script>
+
+</head>
+
+<body class="page">
+
+<section class="page__wrapper">
+  <div class="container">
+    <h1 class="text-center mb-3 mt-2">&Sigma;-state language online debugger</h1>
+    <form class="s-form">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label for="scriptText">Script text:</label>
+            <textarea class="form-control s-form__script" id="scriptText" aria-describedby="scriptText" placeholder="Enter script text here"></textarea>
+            <div id="validation-message" class="validation-message">
+            </div>
+            <div id="execution-message" class="execution-message">
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="environment">Environment variables:</label>
+            <textarea class="form-control s-form__environment" id="environment" aria-describedby="scriptText" placeholder="Enter environment vars here"></textarea>
+            <div id="validation-message" class="validation-message">
+            </div>
+            <div id="execution-message" class="execution-message">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group text-center">
+            <div class="btn-group" role="group" aria-label="Script examples">
+              <button type="button" data-example="door" class="btn btn-outline-secondary examples-btn">Door</button>
+              <button type="button" data-example="crowdfunding" class="btn btn-outline-secondary examples-btn">Crowdfunding</button>
+              <button type="button" data-example="ringSignatures" class="btn btn-outline-secondary examples-btn">Ring signatures</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row justify-content-center">
+          <div class="col-3">
+            <button type="button" class="btn btn-success btn-block" id="verifyBtn">Verify</button>
+          </div>
+          <div class="col-3">
+            <button type="button" class="btn btn-primary btn-block" id="executeBtn">Execute</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  </div>
+  <div class="page__buffer"></div>
+</section>
+<footer class="page__footer">
+  <div class="footer"></div>
+</footer>
+
+
+<!-- Main scripts. You can replace it, but I recommend you to leave it here     -->
+<script src="static/js/main6djh4k21emi.min.js"></script>
+</body>
+
 </html>
