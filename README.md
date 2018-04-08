@@ -5,14 +5,20 @@ sbt run
 
 #### REST API
 
-GET        /
+GET        /                                
+POST       /execute                         
+POST       /validate                        
+GET        /getDic                          
 
-GET        /test
+#### Examples
+#####Verify random script with custom Environment
 
-GET        /getContext
+curl --header "Content-type: application/json" --request POST --data '{"scriptText": "{HEIGHT >= timeout && backerPubKey}", "env" : [{"key": "backerPubKey", "value":"Alice", "type" : "pubKey"}, {"key": "projectPubKey", "value":"Bob", "type" : "pubKey"}, {"key": "timeout", "value":"100", "type" : "Int"}, {"key": "minToRaise", "value":"1000", "type" : "Int"}]}' http://localhost:9000/validate
 
-GET        /compileScript/:script
+#####Execute RingSignature with PreSet
 
-success example http://localhost:9000/compileScript/{anyOf(Array(HEIGHT,height1+deadlineA&&pubkeyA,pubkeyC&&blake2b256(taggedByteArray(1))==hx))}
+curl --header "Content-type: application/json" --request POST --data '{"scriptText": "pubkeyA || pubkeyB", "env" : [{"key": "pubkeyA", "value":"Alice", "type" : "pubKey"}, {"key": "pubkeyB", "value":"Bob", "type" : "pubKey"}], "contextPreset" : "RING"}' http://localhost:9000/execute
 
-failure example http://localhost:9000/compileScript/{anyOf(Array(HEIGHT404,height1+deadlineA&&pubkeyA,pubkeyC&&blake2b256(taggedByteArray(1))==hx))}
+#####Execute Crowdfunding with PreSet
+
+curl --header "Content-type: application/json" --request POST --data '{"scriptText": "anyOf(Array(HEIGHT >= timeout && backerPubKey,allOf(Array(HEIGHT < timeout,projectPubKey,OUTPUTS.exists(fun (out: Box) = {out.value >= minToRaise && out.propositionBytes == projectPubKey.propBytes})))))", "env" : [{"key": "backerPubKey", "value":"Alice", "type" : "pubKey"}, {"key": "projectPubKey", "value":"Bob", "type" : "pubKey"}, {"key": "timeout", "value":"100", "type" : "Int"}, {"key": "minToRaise", "value":"1000", "type" : "Int"}], "contextPreset" : "CROWD"}' http://localhost:9000/execute
