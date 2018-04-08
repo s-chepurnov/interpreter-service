@@ -1,11 +1,8 @@
 GET        /                                controllers.InterpreterController.index
-
 GET        /test                            controllers.InterpreterController.test
-GET        /getContext                      controllers.InterpreterController.getContext
-GET        /setContext/:name                controllers.InterpreterController.setContext(name: String)
-GET        /compileScript/:script           controllers.InterpreterController.compileScript(script: String)
-POST       /compile                         controllers.InterpreterController.compile
-
+POST       /execute                         controllers.InterpreterController.execute
+POST       /validate                        controllers.InterpreterController.validate
+GET        /getDic                          controllers.InterpreterController.getDic
 
 ->         /v1/posts               v1.post.PostRouter
 

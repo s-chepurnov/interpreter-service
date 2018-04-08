@@ -11,20 +11,32 @@ import test.sigmastate.utxo.ErgoProvingInterpreter
 class InterpreterRepository() {
   private val logger = Logger(this.getClass)
 
-  var env = getAtomic()
+  val proverA = new ErgoProvingInterpreter
+  val proverB = new ErgoProvingInterpreter
+  val proverC = new ErgoProvingInterpreter
 
-  //TODO : delete it
-  def list = {
-    /*Seq(
-      EnvironmentDTO("height1", height1),
-      EnvironmentDTO("height2", height2),
-      EnvironmentDTO("deadlineA", deadlineA),
-      EnvironmentDTO("deadlineB", deadlineB),
-      EnvironmentDTO("pubkeyA", pubkeyA),
-      EnvironmentDTO("pubkeyB", pubkeyB),
-      EnvironmentDTO("hx", hx)
-    )*/
+  val pubkeyA = proverA.dlogSecrets.head.publicImage
+  val pubkeyB = proverB.dlogSecrets.head.publicImage
+  val pubkeyC = proverC.dlogSecrets.head.publicImage
+
+  val dictionary = Map[String, Any](
+    "Alice" -> pubkeyA,
+    "Bob" -> pubkeyB,
+    "Carol" -> pubkeyC
+  )
+
+  val matcher = Map(
+    pubkeyA -> proverA,
+    pubkeyB -> proverB,
+    pubkeyC -> proverC
+  )
+
+  val getDictionary = {
+    dictionary
   }
+
+  /*
+  var env = getAtomic()
 
   def put(name: String): Unit = {
     name match {
@@ -97,4 +109,5 @@ class InterpreterRepository() {
     )
     env
   }
+  */
 }
